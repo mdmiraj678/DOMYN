@@ -1,0 +1,418 @@
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>FFCLUBTOPUP — Full Admin</title>
+<style>
+:root{
+  --bg:#0f1724; --card:#0b1220; --accent:#ffb86b; --muted:#9aa4b2; 
+  --glass: rgba(255,255,255,0.03); --white:#eef2ff; --success:#34d399; --danger:#fb7185;
+}
+*{box-sizing:border-box;font-family:Inter,ui-sans-serif,system-ui,Arial}
+body{margin:0;background:linear-gradient(180deg,#071024 0%, var(--bg) 100%);color:var(--white);min-height:100vh}
+header{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;border-bottom:1px solid rgba(255,255,255,0.03);flex-wrap:wrap}
+.brand{display:flex;gap:12px;align-items:center}
+.brand .logo{width:44px;height:44px;border-radius:8px;background:linear-gradient(135deg,#ffb86b,#ff7b7b);display:flex;align-items:center;justify-content:center;font-weight:700;color:#071024}
+.top-right{font-weight:700;color:var(--muted)}
+main{display:flex;gap:20px;padding:20px;flex-wrap:wrap}
+.panel{flex:1;min-width:320px;background:var(--card);border-radius:12px;padding:16px;box-shadow:0 6px 30px rgba(2,6,23,0.6)}
+.panel h2{margin:0 0 10px 0}
+.banners{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+.banner{flex:1;height:90px;border-radius:8px;background:var(--glass);display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:13px;position:relative}
+.banner button{position:absolute;top:4px;right:4px;background:var(--danger);border:none;color:#fff;padding:2px 6px;border-radius:4px;font-size:11px;cursor:pointer}
+.user-info{display:flex;gap:12px;align-items:center;padding:8px 0;border-bottom:1px dashed rgba(255,255,255,0.03);margin-bottom:12px}
+.avatar{width:56px;height:56px;border-radius:8px;background:linear-gradient(90deg,#8b5cf6,#06b6d4);display:flex;align-items:center;justify-content:center;font-weight:700}
+.btn{display:inline-block;padding:8px 12px;border-radius:8px;background:linear-gradient(90deg,#3b82f6,#06b6d4);color:#071024;font-weight:600;border:none;cursor:pointer}
+.muted{color:var(--muted);font-size:13px}
+.card{background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent);padding:12px;border-radius:10px;margin-bottom:12px}
+.items{display:flex;flex-wrap:wrap;gap:10px}
+.item{width:calc(50% - 5px);background:var(--glass);padding:8px;border-radius:8px;display:flex;gap:8px;align-items:center;position:relative}
+.item button{position:absolute;top:4px;right:4px;background:var(--accent);border:none;color:#071024;padding:2px 6px;border-radius:4px;font-size:11px;cursor:pointer}
+.item img{width:56px;height:40px;object-fit:cover;border-radius:6px}
+.small{font-size:13px}
+.input,select,textarea{width:100%;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:var(--white)}
+.orders{margin-top:10px}
+.order{background:rgba(255,255,255,0.02);padding:8px;border-radius:8px;margin-bottom:8px;position:relative}
+.progress-bar{height:6px;border-radius:6px;background:rgba(255,255,255,0.1);margin-top:4px}
+.progress{height:100%;border-radius:6px;background:var(--success);width:0%;}
+.admin{width:420px;min-width:320px}
+.admin .admin-box{background:var(--card);padding:12px;border-radius:12px;position:relative}
+.list{max-height:300px;overflow:auto;padding-right:6px}
+.list .row{display:flex;justify-content:space-between;padding:8px;border-radius:8px;background:rgba(255,255,255,0.01);margin-bottom:8px;align-items:center;flex-wrap:wrap}
+.small-muted{font-size:12px;color:var(--muted)}
+footer{padding:16px;color:var(--muted);font-size:13px}
+.modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:linear-gradient(0deg, rgba(0,0,0,0.6), rgba(0,0,0,0.6));z-index:60}
+.modal.show{display:flex}
+.modal .box{background:var(--card);padding:18px;border-radius:12px;min-width:320px}
+.tiny{font-size:12px;color:var(--muted)}
+.top-right-badge{position:fixed;right:18px;top:14px;background:rgba(255,255,255,0.03);padding:6px 10px;border-radius:8px;font-weight:700}
+@media(max-width:880px){
+  main{flex-direction:column;padding:12px}
+  .admin{width:100%;margin-top:20px}
+  .panel{width:100%;padding:12px}
+  header{flex-direction:column;align-items:flex-start;gap:10px;padding:12px}
+  .brand .logo{width:36px;height:36px;font-size:16px}
+  .top-right{align-self:flex-end}
+  .items .item{width:100%}
+  .input, select, textarea, .btn{font-size:14px;padding:10px}
+  .banners{flex-direction:column}
+  .banner{height:120px}
+  .avatar{width:48px;height:48px;font-size:20px}
+  .card{padding:14px}
+  #consoleModal .box{width:90%;max-width:360px}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <div class="logo">FF</div>
+    <div>
+      <div style="font-weight:800">FFCLUBTOPUP</div>
+      <div class="muted" style="font-size:13px">Free Fire Diamond Topup</div>
+    </div>
+  </div>
+  <div class="top-right">FFCLUBTOPUP</div>
+</header>
+
+<main>
+<section class="panel" id="userPanel">
+  <h2>ইউজার প্যানেল / ড্যাশবোর্ড</h2>
+  <div class="banners" id="bannerRow"></div>
+
+  <div class="user-info">
+    <div class="avatar" id="avatarInitial">V</div>
+    <div style="flex:1">
+      <div id="userName">Guest</div>
+      <div class="muted" id="userEmail">Not signed in</div>
+    </div>
+    <div>
+      <button class="btn" id="googleSign">Google Sign-in</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <div><strong>Top-up Items</strong><div class="tiny muted">রিলোড করুন</div></div>
+      <div class="small-muted">UID দিয়ে টপ-আপ</div>
+    </div>
+    <div class="items" id="itemsList"></div>
+  </div>
+
+  <div class="card">
+    <strong>নতুন অর্ডার তৈরি করুন</strong>
+    <div class="tiny muted">UID, পেমেন্ট মেথড, এবং বিকাশ/নগদ/রকেট আইডি দিন</div>
+    <div style="margin-top:8px">
+      <input class="input" id="ordUid" placeholder="User UID (ex: 123456789)" />
+      <select id="ordItem" class="input" style="margin-top:8px"></select>
+      <select id="payMethod" class="input" style="margin-top:8px">
+        <option value="bKash">bKash</option>
+        <option value="Nagad">Nagad</option>
+        <option value="Rocket">Rocket</option>
+      </select>
+      <input class="input" id="payId" placeholder="Payment receiver ID" style="margin-top:8px"/>
+      <div style="display:flex;gap:8px;margin-top:8px">
+        <button class="btn" id="payNow">Pay & Submit</button>
+        <button class="btn" id="consoleOpen" style="background:linear-gradient(90deg,#a78bfa,#06b6d4)">Console</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card orders">
+    <strong>আপনার অর্ডারসমূহ</strong>
+    <div class="tiny muted">অ্যাডমিন কমপ্লিট করলে স্টেটাস আপডেট হবে</div>
+    <div id="userOrders"></div>
+  </div>
+</section>
+
+<aside class="admin" id="adminPanel" style="display:none;">
+  <div class="admin-box">
+    <h3>Admin Panel</h3>
+    <div style="margin-top:6px"><strong>Login</strong></div>
+    <input id="adminEmail" class="input" placeholder="Admin Email" style="margin-top:6px"/>
+    <input id="adminPass" class="input" type="password" placeholder="Password" style="margin-top:6px"/>
+    <button class="btn" id="adminLogin">Login</button>
+    <div id="adminStatus" class="tiny muted" style="margin-top:4px">Not logged in</div>
+
+    <div id="adminConsole" style="display:none;margin-top:12px">
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <input id="bannerUpload" type="file" accept="image/*" class="input" />
+        <button class="btn" id="uploadBannerBtn">Upload Banner</button>
+      </div>
+
+      <div style="margin-top:10px">
+        <strong>Add/Edit Top-up Item</strong>
+        <input id="itemName" class="input" placeholder="Diamond 100" style="margin-top:6px"/>
+        <input id="itemPrice" class="input" placeholder="Price (৳)" style="margin-top:6px"/>
+        <input id="itemImg" type="file" accept="image/*" class="input" style="margin-top:6px"/>
+        <div style="display:flex;gap:8px;margin-top:6px;flex-wrap:wrap">
+          <button class="btn" id="addItemBtn">Add Item</button>
+          <button class="btn" id="clearItems" style="background:var(--danger)">Clear Items</button>
+        </div>
+      </div>
+
+      <div style="margin-top:12px">
+        <strong>Orders</strong>
+        <div class="list" id="adminOrders"></div>
+      </div>
+    </div>
+  </div>
+</aside>
+
+</main>
+
+<footer>
+  All data stored locally in browser (localStorage). For real deployment, integrate backend + payment API.
+</footer>
+
+<div class="modal" id="consoleModal">
+  <div class="box">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <strong>Console</strong>
+      <button class="btn" id="closeConsole">Close</button>
+    </div>
+    <input id="consoleInput" class="input" placeholder="Type \admin to open login" style="margin-top:10px"/>
+  </div>
+</div>
+
+<script>
+let banners=[], items=[], orders=[], adminLoggedIn=false;
+
+// Elements
+const bannerRow=document.getElementById('bannerRow');
+const itemsList=document.getElementById('itemsList');
+const ordItem=document.getElementById('ordItem');
+const userOrders=document.getElementById('userOrders');
+const adminOrders=document.getElementById('adminOrders');
+const adminPanel=document.getElementById('adminPanel');
+const adminConsole=document.getElementById('adminConsole');
+const adminStatus=document.getElementById('adminStatus');
+const userName=document.getElementById('userName');
+const userEmail=document.getElementById('userEmail');
+const consoleModal=document.getElementById('consoleModal');
+const consoleInput=document.getElementById('consoleInput');
+
+// Local storage functions
+function saveData(){
+  localStorage.setItem('banners', JSON.stringify(banners));
+  localStorage.setItem('items', JSON.stringify(items));
+  localStorage.setItem('orders', JSON.stringify(orders));
+}
+
+function loadData(){
+  const savedBanners=localStorage.getItem('banners');
+  if(savedBanners) banners=JSON.parse(savedBanners);
+  const savedItems=localStorage.getItem('items');
+  if(savedItems) items=JSON.parse(savedItems);
+  const savedOrders=localStorage.getItem('orders');
+  if(savedOrders) orders=JSON.parse(savedOrders);
+
+  renderBanners();
+  renderItems();
+  renderOrderItems();
+  renderUserOrders();
+  renderAdminOrders();
+}
+
+// User Sign-in
+document.getElementById('googleSign').addEventListener('click',()=>{
+  userName.textContent="Vaigaming";
+  userEmail.textContent="vaigaming@example.com";
+  document.getElementById('avatarInitial').textContent="V";
+});
+
+// Console modal
+document.getElementById('consoleOpen').addEventListener('click',()=>{
+  consoleModal.classList.add('show');
+});
+document.getElementById('closeConsole').addEventListener('click',()=>{
+  consoleModal.classList.remove('show');
+});
+consoleInput.addEventListener('keydown',e=>{
+  if(e.key==='Enter'){
+    if(consoleInput.value==='\\admin'){
+      adminPanel.style.display='block';
+      consoleModal.classList.remove('show');
+    }
+    consoleInput.value='';
+  }
+});
+
+// Banner upload/delete
+document.getElementById('uploadBannerBtn').addEventListener('click',()=>{
+  const fileInput=document.getElementById('bannerUpload');
+  if(fileInput.files.length>0){
+    const reader=new FileReader();
+    reader.onload=e=>{
+      banners.push(e.target.result);
+      renderBanners();
+      saveData();
+    };
+    reader.readAsDataURL(fileInput.files[0]);
+  }
+});
+
+function renderBanners(){
+  bannerRow.innerHTML='';
+  banners.forEach((url,idx)=>{
+    const b=document.createElement('div');
+    b.className='banner';
+    b.style.backgroundImage=`url(${url})`;
+    b.style.backgroundSize='cover';
+    b.style.backgroundPosition='center';
+    const delBtn=document.createElement('button');
+    delBtn.textContent='X';
+    delBtn.onclick=()=>{
+      banners.splice(idx,1);
+      renderBanners();
+      saveData();
+    }
+    b.appendChild(delBtn);
+    bannerRow.appendChild(b);
+  });
+}
+
+// Add/Edit Items
+document.getElementById('addItemBtn').addEventListener('click',()=>{
+  const name=document.getElementById('itemName').value;
+  const price=document.getElementById('itemPrice').value;
+  const fileInput=document.getElementById('itemImg');
+  
+  if(name && price){
+    if(fileInput.files.length>0){
+      const reader=new FileReader();
+      reader.onload=e=>{
+        items.push({name,price,img:e.target.result});
+        renderItems();
+        renderOrderItems();
+        saveData();
+      }
+      reader.readAsDataURL(fileInput.files[0]);
+    } else {
+      items.push({name,price,img:''});
+      renderItems();
+      renderOrderItems();
+      saveData();
+    }
+  }
+});
+
+document.getElementById('clearItems').addEventListener('click',()=>{
+  items=[];
+  renderItems();
+  renderOrderItems();
+  saveData();
+});
+
+function renderItems(){
+  itemsList.innerHTML='';
+  items.forEach((it,idx)=>{
+    const div=document.createElement('div');
+    div.className='item';
+    div.innerHTML=`<img src="${it.img}"/><div><strong>${it.name}</strong><div class="small-muted">${it.price} ৳</div></div>`;
+    const editBtn=document.createElement('button');
+    editBtn.textContent='Edit';
+    editBtn.onclick=()=>{
+      const newPrice=prompt('Set new price', it.price);
+      if(newPrice){
+        items[idx].price=newPrice;
+        renderItems();
+        renderOrderItems();
+        saveData();
+      }
+    }
+    div.appendChild(editBtn);
+    itemsList.appendChild(div);
+  });
+}
+
+function renderOrderItems(){
+  ordItem.innerHTML='';
+  items.forEach((it,idx)=>{
+    const opt=document.createElement('option');
+    opt.value=idx;
+    opt.textContent=it.name+" - "+it.price+"৳";
+    ordItem.appendChild(opt);
+  });
+}
+
+// Place Order
+document.getElementById('payNow').addEventListener('click',()=>{
+  const uid=document.getElementById('ordUid').value;
+  const itemIndex=ordItem.value;
+  const payMethod=document.getElementById('payMethod').value;
+  const payId=document.getElementById('payId').value;
+  if(uid && items[itemIndex] && payMethod && payId){
+    const order={uid,item:items[itemIndex].name,price:items[itemIndex].price,payMethod,payId,status:'Pending'};
+    orders.push(order);
+    renderUserOrders();
+    renderAdminOrders();
+    saveData();
+  }
+});
+
+function renderUserOrders(){
+  userOrders.innerHTML='';
+  orders.forEach((o,idx)=>{
+    const div=document.createElement('div');
+    div.className='order';
+    div.innerHTML=`<div><strong>${o.item}</strong> (${o.price}৳) - ${o.status} | UID:${o.uid} | ${o.payMethod} | ${o.payId}</div>
+    <div class="progress-bar"><div class="progress" style="width:${o.status==='Pending'?50:100}%"></div></div>`;
+    userOrders.appendChild(div);
+  });
+}
+
+// Admin login
+document.getElementById('adminLogin').addEventListener('click',()=>{
+  const email=document.getElementById('adminEmail').value;
+  const pass=document.getElementById('adminPass').value;
+  if(email==='admin50' && pass==='admin666'){ // Updated credentials
+    adminLoggedIn=true;
+    adminConsole.style.display='block';
+    adminStatus.textContent='Logged in as Admin';
+    alert('Admin Login Successful!');
+  } else {
+    alert('Invalid credentials');
+  }
+});
+
+// Admin Orders
+function renderAdminOrders(){
+  adminOrders.innerHTML='';
+  orders.forEach((o,idx)=>{
+    const div=document.createElement('div');
+    div.className='row';
+    div.innerHTML=`<div>UID:${o.uid} | ${o.item} (${o.price}৳) | ${o.payMethod} | ${o.payId} | Status:${o.status}</div>
+      <div style="display:flex;gap:4px;flex-wrap:wrap">
+        <button class="btn" onclick="completeOrder(${idx})" style="background:var(--success)">Complete</button>
+        <button class="btn" onclick="editOrderPrice(${idx})" style="background:var(--accent)">Edit Price</button>
+      </div>`;
+    adminOrders.appendChild(div);
+  });
+}
+
+// Admin actions
+function completeOrder(idx){
+  orders[idx].status='Completed';
+  renderUserOrders();
+  renderAdminOrders();
+  saveData();
+}
+
+function editOrderPrice(idx){
+  const newPrice=prompt("Enter new price for this order", orders[idx].price);
+  if(newPrice){
+    orders[idx].price=newPrice;
+    renderUserOrders();
+    renderAdminOrders();
+    saveData();
+  }
+}
+
+// Initial load
+window.onload=loadData;
+</script>
+</body>
+</html>
